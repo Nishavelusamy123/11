@@ -1,0 +1,43 @@
+# Import Libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
+from sklearn.metrics import mean_squared_error, r2_score, classification_report, confusion_matrix
+from sklearn.decomposition import PCA
+
+# Load Dataset
+# Replace 'air_quality_dataset.csv' with the actual path to your file if it's in a different directory
+# For example: df = pd.read_csv('/path/to/your/file/air_quality_dataset.csv')
+df = pd.read_csv('predicted_air_quality.csv')  # Assuming the generated file from previous cell is used
+
+# -------------------------------
+# 1. Data Preprocessing
+# -------------------------------
+
+# Check missing values
+df = df.dropna()  # or use df.fillna(method='ffill') for time-series
+
+# Handle duplicates
+df = df.drop_duplicates()
+
+# Convert date column if exists
+if 'Date' in df.columns: # Changed 'date' to 'Date'
+    df['Date'] = pd.to_datetime(df['Date']) # Changed 'date' to 'Date'
+
+# Encode categorical features
+cat_cols = df.select_dtypes(include=['object']).columns
+for col in cat_cols:
+    df[col] = LabelEncoder().fit_transform(df[col])
+
+# Correlation heatmap
+plt.figure(figsize=(10, 6))
+sns.heatmap(df.corr(), annot=True, cmap='coolwarm')
+plt.title('Correlation Matrix')
+plt.show()
+
+# ... (rest of the code remains the same)
